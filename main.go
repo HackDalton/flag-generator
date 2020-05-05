@@ -25,6 +25,12 @@ func main() {
 	}
 
 	description := args[0]
+
+	fmt.Println(GenerateFlag(description))
+}
+
+// GenerateFlag generates a flag with the given description
+func GenerateFlag(description string) string {
 	description = strings.ToLower(description)
 	description = strings.ReplaceAll(description, " ", "_")
 
@@ -37,7 +43,7 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(prefix + "{" + description + "_" + str + "}")
+	return prefix + "{" + description + "_" + str + "}"
 }
 
 func generateRandomBytes(n int) ([]byte, error) {
