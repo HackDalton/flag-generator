@@ -28,11 +28,11 @@ func main() {
 
 	description := flag.Arg(0)
 
-	fmt.Println(GenerateFlag(description))
+	fmt.Println(GenerateFlag(description, *prefix, *mapVowels))
 }
 
 // GenerateFlag generates a flag with the given description
-func GenerateFlag(description string) string {
+func GenerateFlag(description, prefix string, mapvowels bool) string {
 	description = strings.ToLower(description)
 	description = strings.ReplaceAll(description, " ", "_")
 
@@ -47,7 +47,7 @@ func GenerateFlag(description string) string {
 		panic(err)
 	}
 
-	return *prefix + "{" + description + "_" + str + "}"
+	return prefix + "{" + description + "_" + str + "}"
 }
 
 func generateRandomBytes(n int) ([]byte, error) {
