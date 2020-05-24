@@ -4,12 +4,13 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"errors"
+	"flag"
 	"fmt"
-	"os"
 	"strings"
 )
 
-const prefix = "hackDalton"
+var prefix = flag.String("prefix", "hackDalton", "used as the prefix for the flag")
+var mapVowels = flag.Bool("mapVowels", true, "determines if vowels are mapped to numbers.")
 
 var vowelMap = map[string]string{
 	"a": "4",
@@ -19,12 +20,13 @@ var vowelMap = map[string]string{
 }
 
 func main() {
-	args := os.Args[1:]
-	if len(args) < 1 {
+	flag.Parse()
+
+	if flag.NArg() < 1 {
 		panic(errors.New("Invalid arguments"))
 	}
 
-	description := args[0]
+	description := flag.Arg(0)
 
 	fmt.Println(GenerateFlag(description))
 }
@@ -34,8 +36,10 @@ func GenerateFlag(description string) string {
 	description = strings.ToLower(description)
 	description = strings.ReplaceAll(description, " ", "_")
 
-	for oldChar, newChar := range vowelMap {
-		description = strings.ReplaceAll(description, oldChar, newChar)
+	if *mapVowels {
+		for oldChar, newChar := range vowelMap {
+			description = strings.ReplaceAll(description, oldChar, newChar)
+		}
 	}
 
 	str, err := generateRandomString(10)
@@ -43,7 +47,7 @@ func GenerateFlag(description string) string {
 		panic(err)
 	}
 
-	return prefix + "{" + description + "_" + str + "}"
+	return *prefix + "{" + description + "_" + str + "}"
 }
 
 func generateRandomBytes(n int) ([]byte, error) {
